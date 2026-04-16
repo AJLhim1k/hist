@@ -3,7 +3,7 @@ const state = {
   me: null,
   answered: new Set(),
   quizIndex: 0,
-  wikiImageCache: new Map(),
+  photoLibrary: {},
 };
 
 async function initSessionFromQuery() {
@@ -61,32 +61,12 @@ function renderTimeline() {
   });
 }
 
-async function getWikiThumbnailUrl(title) {
-  if (!title) {
-    return null;
-  }
-  if (state.wikiImageCache.has(title)) {
-    return state.wikiImageCache.get(title);
-  }
-
-  try {
-    const endpoint = `https://ru.wikipedia.org/w/api.php?action=query&prop=pageimages&titles=${encodeURIComponent(
-      title
-    )}&pithumbsize=900&format=json&origin=*`;
-    const res = await fetch(endpoint);
-    const data = await res.json();
-    const pages = data?.query?.pages || {};
-    const firstPage = Object.values(pages)[0];
-    const image = firstPage?.thumbnail?.source || null;
-    state.wikiImageCache.set(title, image);
-    return image;
-  } catch (error) {
-    state.wikiImageCache.set(title, null);
-    return null;
-  }
-}
-
 function createObjectMarkup(obj) {
+  const photoMeta = state.photoLibrary[obj.name] || null;
+  const hasPhoto = Boolean(photoMeta && photoMeta.filename);
+  const photoAlt = (photoMeta && photoMeta.alt) || obj.name;
+  const photoPath = hasPhoto ? `/static/photos/${encodeURI(photoMeta.filename)}` : null;
+
   const sourceLinks = obj.sources
     .map((sid) => {
       const source = state.content.sources[sid];
@@ -96,46 +76,40 @@ function createObjectMarkup(obj) {
     .filter(Boolean)
     .join(", ");
 
+  const photoCreditParts = [];
+  if (photoMeta && photoMeta.credit) {
+    photoCreditParts.push(`Автор: ${photoMeta.credit}`);
+  }
+  if (photoMeta && photoMeta.license) {
+    photoCreditParts.push(`Лицензия: ${photoMeta.license}`);
+  }
+  if (photoMeta && photoMeta.source_url) {
+    photoCreditParts.push(
+      `Ссылка: <a href="${photoMeta.source_url}" target="_blank" rel="noopener">источник фото</a>`
+    );
+  }
+  const photoCredit = photoCreditParts.join(" | ");
+
+  const photoMarkup = hasPhoto
+    ? `<img class="object-photo" src="${photoPath}" alt="${photoAlt}" loading="lazy" />`
+    : `<div class="object-photo placeholder">Добавьте фото в локальную базу</div>`;
+
   return `
     <div class="object-card">
-      <div class="object-photo placeholder" data-wiki-title="${obj.wiki_title || ""}">
-        Фото загружается
-      </div>
+      ${photoMarkup}
       <div class="object-content">
         <p><strong>${obj.name}</strong> (${obj.years})</p>
         <p>Архитекторы/авторы: ${obj.architects}.</p>
         <p>Заказчик: ${obj.customers}. Статус: ${obj.status}.</p>
         <p>Факт: ${obj.fact}</p>
+        ${photoCredit ? `<p class="photo-credit">${photoCredit}</p>` : ""}
         ${sourceLinks ? `<p>${sourceLinks}</p>` : ""}
       </div>
     </div>
   `;
 }
 
-async function hydrateRouteImages(container) {
-  const placeholders = container.querySelectorAll(".object-photo.placeholder");
-  await Promise.all(
-    Array.from(placeholders).map(async (node) => {
-      const title = node.getAttribute("data-wiki-title");
-      if (!title) {
-        node.textContent = "Фото не задано";
-        return;
-      }
-      const imageUrl = await getWikiThumbnailUrl(title);
-      if (!imageUrl) {
-        node.textContent = "Фото недоступно";
-        return;
-      }
-      const img = document.createElement("img");
-      img.className = "object-photo";
-      img.src = imageUrl;
-      img.alt = title;
-      node.replaceWith(img);
-    })
-  );
-}
-
-async function renderRoute() {
+function renderRoute() {
   const container = document.getElementById("route");
   container.innerHTML = "";
 
@@ -154,8 +128,6 @@ async function renderRoute() {
 
     container.appendChild(article);
   });
-
-  await hydrateRouteImages(container);
 }
 
 function renderInfluences() {
@@ -380,12 +352,13 @@ async function bootstrap() {
   ]);
 
   state.content = content;
+  state.photoLibrary = content.photo_library || {};
   state.me = me;
   state.answered = new Set(me.answered_question_ids || []);
 
   renderProjectInfo();
   renderTimeline();
-  await renderRoute();
+  renderRoute();
   renderInfluences();
   renderUnrealized();
   renderSources();

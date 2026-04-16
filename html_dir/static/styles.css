@@ -255,6 +255,12 @@ h2 {
   margin: 4px 0;
 }
 
+.photo-credit {
+  font-size: 12px;
+  color: #455263;
+  line-height: 1.4;
+}
+
 .bulleted,
 .sources {
   margin: 0;

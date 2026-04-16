@@ -1,0 +1,124 @@
+{
+  "notes": "Локальная база фотографий. Загружайте файлы в html_dir/static/photos/, а здесь указывайте filename и при необходимости атрибуцию.",
+  "objects": {
+    "Шуховская радиобашня на Шаболовке": {
+      "filename": "shukhov_tower.jpg",
+      "alt": "Шуховская радиобашня на Шаболовке",
+      "credit": "",
+      "license": "",
+      "source_url": ""
+    },
+    "Дом Наркомфина": {
+      "filename": "narkomfin.jpg",
+      "alt": "Дом Наркомфина в Москве",
+      "credit": "",
+      "license": "",
+      "source_url": ""
+    },
+    "Клуб имени Русакова": {
+      "filename": "rusakov_club.jpg",
+      "alt": "Клуб имени Русакова",
+      "credit": "",
+      "license": "",
+      "source_url": ""
+    },
+    "Мавзолей Ленина (каменная версия)": {
+      "filename": "lenin_mausoleum.jpg",
+      "alt": "Мавзолей Ленина на Красной площади",
+      "credit": "",
+      "license": "",
+      "source_url": ""
+    },
+    "Первая очередь Московского метро": {
+      "filename": "metro_1935.jpg",
+      "alt": "Открытие первой очереди Московского метро",
+      "credit": "",
+      "license": "",
+      "source_url": ""
+    },
+    "Станция «Маяковская»": {
+      "filename": "mayakovskaya.jpg",
+      "alt": "Интерьер станции Маяковская",
+      "credit": "",
+      "license": "",
+      "source_url": ""
+    },
+    "Генеральный план реконструкции Москвы": {
+      "filename": "genplan_1935.jpg",
+      "alt": "Схема Генплана реконструкции Москвы 1935",
+      "credit": "",
+      "license": "",
+      "source_url": ""
+    },
+    "Проект Дворца Советов": {
+      "filename": "palace_of_soviets.jpg",
+      "alt": "Визуализация проекта Дворца Советов",
+      "credit": "",
+      "license": "",
+      "source_url": ""
+    },
+    "Главное здание МГУ": {
+      "filename": "msu_main_building.jpg",
+      "alt": "Главное здание МГУ",
+      "credit": "",
+      "license": "",
+      "source_url": ""
+    },
+    "Здание МИД на Смоленской-Сенной": {
+      "filename": "mid_building.jpg",
+      "alt": "Здание МИД в Москве",
+      "credit": "",
+      "license": "",
+      "source_url": ""
+    },
+    "Постановление «Об устранении излишеств»": {
+      "filename": "decree_1955.jpg",
+      "alt": "Документ постановления 1955 года",
+      "credit": "",
+      "license": "",
+      "source_url": ""
+    },
+    "Курс на массовое жилищное строительство": {
+      "filename": "mass_housing_1957.jpg",
+      "alt": "Массовое жилищное строительство в Москве",
+      "credit": "",
+      "license": "",
+      "source_url": ""
+    },
+    "Новые Черемушки (образцовые кварталы)": {
+      "filename": "new_cheryomushki.jpg",
+      "alt": "Застройка Новых Черемушек",
+      "credit": "",
+      "license": "",
+      "source_url": ""
+    },
+    "Государственный Кремлевский дворец": {
+      "filename": "kremlin_palace.jpg",
+      "alt": "Государственный Кремлевский дворец",
+      "credit": "",
+      "license": "",
+      "source_url": ""
+    },
+    "Проспект (улица) Новый Арбат": {
+      "filename": "new_arbat.jpg",
+      "alt": "Новый Арбат в Москве",
+      "credit": "",
+      "license": "",
+      "source_url": ""
+    },
+    "Останкинская телебашня": {
+      "filename": "ostankino_tower.jpg",
+      "alt": "Останкинская телебашня",
+      "credit": "",
+      "license": "",
+      "source_url": ""
+    },
+    "Спортивный комплекс «Олимпийский»": {
+      "filename": "olympiyskiy.jpg",
+      "alt": "СК Олимпийский",
+      "credit": "",
+      "license": "",
+      "source_url": ""
+    }
+  }
+}

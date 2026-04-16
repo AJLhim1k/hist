@@ -51,9 +51,19 @@ python bot_app.py
 - `bot_app.py` — aiohttp + aiogram приложение.
 - `db.py` — SQLite слой (пользователи, ответы квиза, рейтинг).
 - `content/moscow_xx_century.json` — сценарий экскурсии, квиз, источники.
+- `content/photo_library.json` — локальная база фотографий и атрибуции.
 - `html_dir/index.html` — UI.
 - `html_dir/static/styles.css` — стили.
 - `html_dir/static/app.js` — клиентская логика.
+- `html_dir/static/photos/` — папка с вашими фотографиями объектов.
+
+## Локальная база фото (без API)
+1. Копируйте фотографии в `html_dir/static/photos/`.
+2. В `content/photo_library.json` указывайте для нужного объекта:
+   - `filename` (имя файла в папке `photos`),
+   - `alt` (подпись/alt-текст),
+   - при необходимости `credit`, `license`, `source_url`.
+3. Перезапустите приложение — фото подтянутся из локальной базы автоматически.
 
 ## Что можно улучшить дальше
 - Добавить карту маршрута (Яндекс/2ГИС) и геопривязку остановок.

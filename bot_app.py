@@ -17,6 +17,7 @@ import db
 
 BASE_DIR = Path(__file__).resolve().parent
 CONTENT_PATH = BASE_DIR / "content" / "moscow_xx_century.json"
+PHOTO_LIBRARY_PATH = BASE_DIR / "content" / "photo_library.json"
 STATIC_DIR = BASE_DIR / "html_dir"
 STATIC_ASSETS_DIR = STATIC_DIR / "static"
 
@@ -26,7 +27,19 @@ def load_content() -> Dict[str, Any]:
         return json.load(f)
 
 
+def load_photo_library() -> Dict[str, Any]:
+    if not PHOTO_LIBRARY_PATH.exists():
+        return {"notes": "", "objects": {}}
+
+    with PHOTO_LIBRARY_PATH.open("r", encoding="utf-8") as f:
+        data = json.load(f)
+    if "objects" not in data or not isinstance(data["objects"], dict):
+        data["objects"] = {}
+    return data
+
+
 CONTENT = load_content()
+PHOTO_LIBRARY = load_photo_library()
 QUESTIONS = {item["id"]: item for item in CONTENT["quiz"]}
 
 
@@ -88,6 +101,25 @@ def render_markdown_report(user: Dict[str, Any]) -> str:
         f"- [{source['title']}]({source['url']})"
         for source in CONTENT["sources"].values()
     ]
+    photo_lines = []
+    photos = PHOTO_LIBRARY.get("objects", {})
+    for stop in CONTENT["route_stops"]:
+        for obj in stop["objects"]:
+            photo_meta = photos.get(obj["name"], {})
+            if not photo_meta:
+                continue
+            if not photo_meta.get("filename"):
+                continue
+
+            details = [f"файл: `html_dir/static/photos/{photo_meta['filename']}`"]
+            if photo_meta.get("credit"):
+                details.append(f"автор: {photo_meta['credit']}")
+            if photo_meta.get("license"):
+                details.append(f"лицензия: {photo_meta['license']}")
+            if photo_meta.get("source_url"):
+                details.append(f"источник: {photo_meta['source_url']}")
+
+            photo_lines.append(f"- **{obj['name']}** — " + "; ".join(details))
 
     md = "\n".join(
         [
@@ -122,6 +154,9 @@ def render_markdown_report(user: Dict[str, Any]) -> str:
             "",
             "## Вывод",
             "Архитектура Москвы XX века прошла путь от авангардного эксперимента к монументальной репрезентации и затем к индустриальной массовости. Следы всех этапов видны в городской ткани Москвы сегодня.",
+            "",
+            "## Фотоматериалы (локальная база)",
+            *(photo_lines if photo_lines else ["- Добавьте файлы в `html_dir/static/photos/` и заполните `content/photo_library.json`."]),
             "",
             "## Источники",
             *source_lines,
@@ -247,7 +282,10 @@ async def api_me(request: web.Request) -> web.Response:
 
 
 async def api_content(_: web.Request) -> web.Response:
-    return web.json_response(CONTENT)
+    payload = dict(CONTENT)
+    payload["photo_library"] = PHOTO_LIBRARY.get("objects", {})
+    payload["photo_library_notes"] = PHOTO_LIBRARY.get("notes", "")
+    return web.json_response(payload)
 
 
 async def api_submit_answer(request: web.Request) -> web.Response:
