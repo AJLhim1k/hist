@@ -3,6 +3,7 @@ const state = {
   me: null,
   answered: new Set(),
   quizIndex: 0,
+  wikiImageCache: new Map(),
 };
 
 async function initSessionFromQuery() {
@@ -41,6 +42,7 @@ function renderProjectInfo() {
   setText("project-title", project.title);
   setText("project-goal", project.goal);
   setText("project-meta", `Тема: ${project.theme} | Команда: ${project.team.join(", ")}`);
+  setText("project-note", project.note || "");
 }
 
 function renderTimeline() {
@@ -59,7 +61,81 @@ function renderTimeline() {
   });
 }
 
-function renderRoute() {
+async function getWikiThumbnailUrl(title) {
+  if (!title) {
+    return null;
+  }
+  if (state.wikiImageCache.has(title)) {
+    return state.wikiImageCache.get(title);
+  }
+
+  try {
+    const endpoint = `https://ru.wikipedia.org/w/api.php?action=query&prop=pageimages&titles=${encodeURIComponent(
+      title
+    )}&pithumbsize=900&format=json&origin=*`;
+    const res = await fetch(endpoint);
+    const data = await res.json();
+    const pages = data?.query?.pages || {};
+    const firstPage = Object.values(pages)[0];
+    const image = firstPage?.thumbnail?.source || null;
+    state.wikiImageCache.set(title, image);
+    return image;
+  } catch (error) {
+    state.wikiImageCache.set(title, null);
+    return null;
+  }
+}
+
+function createObjectMarkup(obj) {
+  const sourceLinks = obj.sources
+    .map((sid) => {
+      const source = state.content.sources[sid];
+      if (!source) return "";
+      return `<a href="${source.url}" target="_blank" rel="noopener">источник</a>`;
+    })
+    .filter(Boolean)
+    .join(", ");
+
+  return `
+    <div class="object-card">
+      <div class="object-photo placeholder" data-wiki-title="${obj.wiki_title || ""}">
+        Фото загружается
+      </div>
+      <div class="object-content">
+        <p><strong>${obj.name}</strong> (${obj.years})</p>
+        <p>Архитекторы/авторы: ${obj.architects}.</p>
+        <p>Заказчик: ${obj.customers}. Статус: ${obj.status}.</p>
+        <p>Факт: ${obj.fact}</p>
+        ${sourceLinks ? `<p>${sourceLinks}</p>` : ""}
+      </div>
+    </div>
+  `;
+}
+
+async function hydrateRouteImages(container) {
+  const placeholders = container.querySelectorAll(".object-photo.placeholder");
+  await Promise.all(
+    Array.from(placeholders).map(async (node) => {
+      const title = node.getAttribute("data-wiki-title");
+      if (!title) {
+        node.textContent = "Фото не задано";
+        return;
+      }
+      const imageUrl = await getWikiThumbnailUrl(title);
+      if (!imageUrl) {
+        node.textContent = "Фото недоступно";
+        return;
+      }
+      const img = document.createElement("img");
+      img.className = "object-photo";
+      img.src = imageUrl;
+      img.alt = title;
+      node.replaceWith(img);
+    })
+  );
+}
+
+async function renderRoute() {
   const container = document.getElementById("route");
   container.innerHTML = "";
 
@@ -67,26 +143,7 @@ function renderRoute() {
     const article = document.createElement("article");
     article.className = "route-stop";
 
-    const objects = stop.objects
-      .map((obj) => {
-        const sourceLinks = obj.sources
-          .map((sid) => {
-            const source = state.content.sources[sid];
-            if (!source) return "";
-            return `<a href="${source.url}" target="_blank" rel="noopener">источник</a>`;
-          })
-          .filter(Boolean)
-          .join(", ");
-
-        return `<li>
-          <strong>${obj.name}</strong> (${obj.years}).
-          <br/>Архитекторы/авторы: ${obj.architects}.
-          <br/>Заказчик: ${obj.customers}. Статус: ${obj.status}.
-          <br/>Факт: ${obj.fact}
-          ${sourceLinks ? `<br/>${sourceLinks}` : ""}
-        </li>`;
-      })
-      .join("");
+    const objects = stop.objects.map((obj) => `<li>${createObjectMarkup(obj)}</li>`).join("");
 
     article.innerHTML = `
       <h3>${stop.title}</h3>
@@ -97,6 +154,8 @@ function renderRoute() {
 
     container.appendChild(article);
   });
+
+  await hydrateRouteImages(container);
 }
 
 function renderInfluences() {
@@ -326,7 +385,7 @@ async function bootstrap() {
 
   renderProjectInfo();
   renderTimeline();
-  renderRoute();
+  await renderRoute();
   renderInfluences();
   renderUnrealized();
   renderSources();
