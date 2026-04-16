@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Статистика стратегий</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7f9;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .chart-wrapper {
+      display: grid;
+      grid-template-areas:
+        "top-left     top-right"
+        "center       center"
+        "bottom-left  bottom-right";
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto auto;
+      gap: 0;
+      max-width: 1000px;
+
+      overflow: visible;
+
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      padding: -20px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 0.6s ease-in-out;
+      overflow: visible;
+      border: 1px solid #e0e0e0;
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.97) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .chart-box {
+      padding: 20px;
+      border: 1px solid #e5e5e5;
+      border-collapse: collapse;
+      position: relative;
+    }
+
+    .top-left {
+      grid-area: top-left;
+      border-right: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .top-right {
+      grid-area: top-right;
+      border-left: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .center {
+      grid-area: center;
+      border-top: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .bottom-left {
+      grid-area: bottom-left;
+      border-right: 1px solid #ddd;
+      border-top: 1px solid #ddd;
+    }
+
+    .bottom-right {
+      grid-area: bottom-right;
+      border-left: 1px solid #ddd;
+      border-top: 1px solid #ddd;
+    }
+
+    canvas {
+      width: 100%;
+      max-width: 180px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .center canvas {
+      max-width: 280px;
+    }
+
+    .back-button {
+      margin-top: 30px;
+    }
+
+    @keyframes bounceY {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(6px);
+      }
+    }
+
+    .back-button a {
+      display: inline-block;
+      text-decoration: none;
+      background-color: #d40000;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      font-size: 16px;
+      position: relative;
+    }
+
+    .back-button a::before {
+      content: "↓";
+      margin-right: 8px;
+      font-size: 18px;
+      display: inline-block;
+      animation: bounceY 1.2s infinite ease-in-out;
+      transform: translateX(-4px);
+    }
+
+    .back-button a:hover {
+      background-color: #bb0000;
+    }
+
+  .chartjs-tooltip {
+    z-index: 9999 !important;
+    pointer-events: none;
+  }
+
+  canvas {
+  position: relative;
+  z-index: 10; /* выше родительского */
+}
+
+  </style>
+</head>
+<body>
+
+  <h1>Статистика по стратегиям</h1>
+
+  <div class="chart-wrapper" id="charts">
+    <!-- Диаграммы будут добавлены динамически -->
+  </div>
+
+  <div class="back-button">
+    <a href="/html_dir/bot_app.html">Назад</a>
+  </div>
+
+  <script>
+    const charts = {};
+
+    function createPieChart(ctx, label, data) {
+      // Ключевой момент — чтобы тултип не обрезался
+      ctx.canvas.parentNode.style.overflow = 'visible';
+
+      return new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: ['Правильных', 'Неправильных'],
+          datasets: [{
+            label: label,
+            data: [data.correct_cnt, data.wrong_cnt],
+            backgroundColor: ['#bb0000', '#fdd9b5'],
+            hoverOffset: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            tooltip: {
+              backgroundColor: '#333',
+              titleColor: '#fff',
+              bodyColor: '#fff',
+              borderColor: '#999',
+              borderWidth: 1,
+  bodyFont: {
+    size: 8.6
+  },
+              padding: 12, // Внутренние отступы
+              cornerRadius: 6, // Скругление углов
+              callbacks: {
+                label: function(context) {
+                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                  const value = context.parsed;
+                  const percent = total ? ((value / total) * 100).toFixed(1) : 0;
+                  return `${context.label}: ${percent}%       \u200B\u200B\u200B\u200B\u200B\u200B\u200B\u200B\u200B\u200B\u200B\u200B\u200B\u200B\u200B\u200B\u200B\u200B`;
+                }
+              }
+            },
+            legend: {
+              display: false
+            },
+            title: {
+              display: true,
+              text: label,
+              padding: {
+  top: 12,
+  bottom: 12,
+  left: 30,
+  right: 30
+}
+
+            }
+          }
+        }
+      });
+    }
+
+    async function fetchTopStrategies() {
+      const res = await fetch('/api/answers/top');
+      return await res.json();
+    }
+
+    async function updateCharts() {
+      const container = document.getElementById("charts");
+      const strategies = (await fetchTopStrategies()).filter(s => s.name !== 'none');
+
+
+      let totalCorrect = 0;
+      let totalWrong = 0;
+
+      container.innerHTML = "";
+
+      const positions = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
+
+      for (let i = 0; i < strategies.length; i++) {
+        const s = strategies[i];
+        const id = `chart_${i}`;
+        const posClass = positions[i] || 'bottom-right';
+
+        const box = document.createElement("div");
+        box.className = `chart-box ${posClass}`;
+        box.innerHTML = `<canvas id="${id}"></canvas>`;
+        container.appendChild(box);
+
+        const ctx = document.getElementById(id).getContext("2d");
+        charts[s.name] = createPieChart(ctx, s.name, s);
+
+        totalCorrect += s.correct_cnt;
+        totalWrong += s.wrong_cnt;
+      }
+
+      const totalBox = document.createElement("div");
+      totalBox.className = "chart-box center";
+      totalBox.innerHTML = `<canvas id="chart_total"></canvas>`;
+      container.appendChild(totalBox);
+
+      const totalCtx = document.getElementById("chart_total").getContext("2d");
+      charts["total"] = createPieChart(totalCtx, "Общая статистика", {
+        correct_cnt: totalCorrect,
+        wrong_cnt: totalWrong
+      });
+    }
+
+    updateCharts();
+    setInterval(updateCharts, 10000);
+  </script>
+</body>
+</html>

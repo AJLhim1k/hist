@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7f9;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px 0;
+      overflow-y: auto;
+    }
+
+    #quiz-container {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      max-width: 450px;
+      width: 100%;
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+
+    img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .facts-container {
+      margin: 20px 0;
+      text-align: left;
+    }
+
+    .fact-item {
+      background: #f8f9ff;
+      margin-bottom: 10px;
+      padding: 12px 15px;
+      border-radius: 8px;
+      border-left: 3px solid #5d78ff;
+      font-size: 14px;
+    }
+
+    .fact-item:nth-child(1) { border-left-color: #4CAF50; }
+    .fact-item:nth-child(2) { border-left-color: #FF9800; }
+    .fact-item:nth-child(3) { border-left-color: #F44336; }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      min-width: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #long-btn {
+      background-color: #4CAF50;
+    }
+
+    #short-btn {
+      background-color: #F44336;
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    #long-btn::before {
+      content: "👍";
+      position: absolute;
+      left: 15px;
+      font-size: 20px;
+      animation: rise 1.5s infinite ease-in-out;
+    }
+
+    @keyframes rise {
+      0%, 100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      50% {
+        transform: translateY(-10px);
+        opacity: 0.7;
+      }
+    }
+
+    #short-btn::before {
+      content: "👎";
+      position: absolute;
+      left: 15px;
+      font-size: 20px;
+      animation: fall 1.5s infinite ease-in-out;
+    }
+
+    .fade-out {
+      animation: fadeOut 0.5s ease forwards;
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+      }
+    }
+
+    @keyframes fall {
+      0%, 100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      50% {
+        transform: translateY(10px);
+        opacity: 0.7;
+      }
+    }
+
+    .button-text {
+      margin-left: 20px;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(1.03);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(0,0,0,.1);
+      border-radius: 50%;
+      border-top-color: #5d78ff;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 10px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div id="quiz-container">
+    <h2>Определи, есть ли на рынке манипуляция
+
+</h2>
+    <img id="graph-img" src="" alt="График">
+
+    <div class="facts-container">
+      <div class="fact-item" id="fact1">Факт 1 о графике</div>
+      <div class="fact-item" id="fact2">Факт 2 о графике</div>
+      <div class="fact-item" id="fact3">Факт 3 о графике</div>
+    </div>
+
+    <form id="quiz-form">
+      <input type="hidden" name="answer" id="answer">
+      <div class="button-container">
+        <button type="submit" id="long-btn" onclick="setAnswer('short')">
+          <span class="button-text">Нет манипуляции</span>
+        </button>
+        <button type="submit" id="short-btn" onclick="setAnswer('long')">
+          <span class="button-text">Есть манипуляция</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    let correctAnswer = null;
+    let currentFilename = null;
+
+    function setAnswer(value) {
+      document.getElementById("answer").value = value;
+    }
+
+    document.getElementById("quiz-form").addEventListener("submit", function(event) {
+      event.preventDefault();
+      const userAnswer = document.getElementById("answer").value;
+      const container = document.getElementById("quiz-container");
+
+      container.classList.add("fade-out");
+
+      const isCorrect = (
+        (correctAnswer === true && userAnswer === "long") ||
+        (correctAnswer === false && userAnswer === "short")
+      );
+
+      setTimeout(() => {
+        const resultPage = isCorrect ? "correct_pd.html" : "wrong_pd.html";
+        window.location.href = `${resultPage}?file=${encodeURIComponent(currentFilename)}`;
+      }, 500);
+    });
+
+    // Функция для загрузки данных из JSON
+    async function loadQuestions() {
+      try {
+        const response = await fetch('../../list.json');
+        if (!response.ok) {
+          throw new Error('Не удалось загрузить данные вопросов');
+        }
+        const questions = await response.json();
+        return questions;
+      } catch (error) {
+        console.error('Ошибка загрузки вопросов:', error);
+        return [];
+      }
+    }
+
+    // Инициализация при загрузке страницы
+    document.addEventListener("DOMContentLoaded", async function() {
+  const questions = await loadQuestions();
+
+  if (questions.length === 0) {
+    console.error("Список файлов пуст");
+    document.getElementById("graph-img").alt = "Ошибка загрузки изображения.";
+    return;
+  }
+
+  // Фильтрация: допускаем только графики с номерами 50–100 и 120–200
+  const filteredQuestions = questions.filter(q => {
+    const match = q.file.match(/\d+/); // извлекаем число из имени файла
+    if (!match) return false;
+    const num = parseInt(match[0], 10);
+    return (num >= 111 && num <= 140) || (num >= 490 && num <= 520);
+  });
+
+  if (filteredQuestions.length === 0) {
+    console.error("Нет подходящих графиков после фильтрации");
+    document.getElementById("graph-img").alt = "Нет подходящих графиков.";
+    return;
+  }
+
+  const randomItem = filteredQuestions[Math.floor(Math.random() * filteredQuestions.length)];
+  document.getElementById("graph-img").src = `../../../questions/${randomItem.file}`;
+  correctAnswer = randomItem.up;
+  currentFilename = randomItem.file;
+
+  // Устанавливаем факты
+  document.getElementById("fact1").textContent = randomItem.fact_1;
+  document.getElementById("fact2").textContent = randomItem.fact_2;
+  document.getElementById("fact3").textContent = randomItem.fact_3;
+});
+
+  </script>
+</body>
+</html>

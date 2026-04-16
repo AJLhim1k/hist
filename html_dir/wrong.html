@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Неправильно</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffecec;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px 10px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    .main-container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      display: none;
+      opacity: 0;
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        transform: scale(0.97);
+      }
+    }
+
+    .fade-out {
+      animation: fadeOut 0.4s ease forwards;
+    }
+
+    h1 {
+      font-size: 22px;
+      color: #a80000;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-size: 18px;
+      color: #333;
+      margin: 20px 0 12px;
+    }
+
+    #plot-image {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+      margin: 5px 0;
+      border: 1px solid #eee;
+    }
+
+    .facts-container {
+      margin: 15px 0;
+      text-align: left;
+    }
+
+    .fact-item {
+      background: #f8f9ff;
+      margin-bottom: 5px;
+      padding: 7px 10px;
+      border-radius: 6px;
+      border-left: 4px solid #5d78ff;
+      font-size: 14px;
+    }
+
+    .fact-item:nth-child(1) { border-left-color: #4CAF50; }
+    .fact-item:nth-child(2) { border-left-color: #FF9800; }
+    .fact-item:nth-child(3) { border-left-color: #F44336; }
+
+    .score-display {
+      font-size: 16px;
+      margin: 7px 0;
+      padding: 7px;
+      background: #f5f5f5;
+      border-radius: 12px;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .buttons-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 10px;
+      font-size: 14px;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .retry-btn {
+      background-color: #F44336;
+    }
+
+    .menu-btn {
+      background-color: #2196F3;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .action-btn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-container" id="main">
+    <h1>Неверный ответ 😕</h1>
+
+    <div>
+      <h2>Правильный график:</h2>
+      <p id="correct-answer" style="font-size: 16px; color: #333; margin-bottom: 10px;"></p>
+      <img id="plot-image" alt="График ответа">
+    </div>
+
+    <div class="facts-container">
+      <div class="fact-item" id="fact1"></div>
+      <div class="fact-item" id="fact2"></div>
+      <div class="fact-item" id="fact3"></div>
+    </div>
+
+    <div class="score-display">
+      Ваш текущий счёт: <span id="score">0</span>
+    </div>
+
+    <div class="buttons-container">
+      <button class="action-btn retry-btn" onclick="navigateTo('quiz.html')">Еще раз</button>
+      <button class="action-btn menu-btn" onclick="navigateTo('bot_app.html')">Главное меню</button>
+    </div>
+  </div>
+
+  <script>
+    const filename = new URLSearchParams(window.location.search).get('file');
+    const plotImg = document.getElementById('plot-image');
+    const correctAnswerEl = document.getElementById('correct-answer');
+
+    function navigateTo(page) {
+      const container = document.getElementById("main");
+      container.classList.add("fade-out");
+      setTimeout(() => {
+        window.location.href = page;
+      }, 400); // подожди пока сработает fade-out
+    }
+
+    async function updateData() {
+      try {
+        const res = await fetch("/api/check_user", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" }
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          document.getElementById("score").textContent = data.score || "0";
+        }
+
+        if (filename) {
+          const paths = [
+            `/questions/answers/${filename}`,
+            `/answers/${filename}`,
+            `answers/${filename}`,
+            `../answers/${filename}`
+          ];
+          const timestamp = new Date().getTime();
+          let loaded = false;
+
+          for (const path of paths) {
+            const testImg = new Image();
+            testImg.src = `${path}?t=${timestamp}`;
+
+            await new Promise(resolve => {
+              testImg.onload = () => {
+                if (!loaded) {
+                  plotImg.src = testImg.src;
+                  loaded = true;
+                }
+                resolve();
+              };
+              testImg.onerror = resolve;
+            });
+
+            if (loaded) break;
+          }
+
+          if (!loaded) {
+            plotImg.alt = 'График не доступен';
+          }
+
+          const jsonRes = await fetch("./list.json");
+          if (jsonRes.ok) {
+            const list = await jsonRes.json();
+            const questionInfo = list.find(q => q.file === filename);
+
+            if (questionInfo) {
+              document.getElementById("fact1").textContent = questionInfo.fact_1 || 'Нет информации';
+              document.getElementById("fact2").textContent = questionInfo.fact_2 || 'Нет информации';
+              document.getElementById("fact3").textContent = questionInfo.fact_3 || 'Нет информации';
+
+              const labelMap = { 'none': 'Нет манипуляции' };
+              const readableAns = labelMap[questionInfo.ans] || questionInfo.ans?.charAt(0).toUpperCase() + questionInfo.ans?.slice(1);
+              correctAnswerEl.textContent = `Правильный ответ: ${readableAns || '(нет данных)'}`;
+            }
+          }
+        }
+
+        const container = document.getElementById("main");
+        container.style.display = 'block';
+        container.style.animation = 'fadeIn 0.5s ease forwards';
+      } catch (err) {
+        console.error("Ошибка при загрузке:", err);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", updateData);
+  </script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Pump & Dump</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    h1 {
+      color: #d40000;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    p {
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .graph {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .fact-item {
+      background: #fff5f5;
+      margin-bottom: 10px;
+      padding: 12px 16px;
+      border-radius: 6px;
+      border-left: 4px solid #f44336;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    .recommendations {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 30px;
+    }
+    .recommendation-item {
+      background: #e8f5e9;
+      padding: 15px;
+      border-left: 4px solid #4caf50;
+      border-radius: 6px;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    .button-group {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 30px;
+    }
+    .back-button {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      padding: 12px 24px;
+      font-size: 14px;
+      background-color: #e04a4a;
+      color: white;
+      border: 1px solid #c73838;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+    .back-button:hover {
+      background-color: #c73838;
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Pump & Dump</h1>
+    <p><strong>Pump & Dump</strong> — это рыночная схема, при которой цена актива искусственно завышается (pump), а затем резко сбрасывается (dump), что часто сопровождается продажей крупных объёмов активов.</p>
+    <p>Такие схемы нередко используются на малоликвидных рынках и могут вводить в заблуждение розничных трейдеров.</p>
+
+    <div class="graph">
+      <img src="../../../questions/plot102.png" alt="Пример графика Pump & Dump">
+    </div>
+
+<span style="text-decoration: underline; text-decoration-color: red; text-underline-offset: 4px;">    <p><strong>Признаки схемы:</strong></p>
+
+</span>
+    <div class="facts-container">
+      <div class="fact-item">Резкий рост цены без фундаментальных новостей (например, > 50% за день)</div>
+      <div class="fact-item">Аномально высокий объём торгов (в 5–10 раз выше среднего)</div>
+      <div class="fact-item">Гиперактивное продвижение в соцсетях (YouTube, Twitter, Telegram и др.)</div>
+      <div class="fact-item">Малая ликвидность и спред > 2–3% между покупкой и продажей</div>
+    </div>
+<span style="text-decoration: underline; text-decoration-color: green; text-underline-offset: 4px;">        <p><strong>Рекомендации: </strong></p>
+
+
+</span>    <div class="recommendations">
+      <div class="recommendation-item">Изучай фундаментальные показатели проекта, а не только рост цены</div>
+      <div class="recommendation-item">Смотри на объёмы торгов и наличие реальных новостей</div>
+      <div class="recommendation-item">Остерегайся агрессивных советов в чатах и форумах</div>
+    </div>
+
+    <div class="button-group">
+      <button class="back-button" onclick="window.history.back()">Назад</button>
+      <button class="back-button" onclick="window.location.href='quiz_pd.html'">К заданию</button>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Правильно</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px 10px;
+      box-sizing: border-box;
+      position: relative;
+      overflow-y: auto;
+    }
+
+    /* Анимация заполнения */
+    .page-fill {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #8BC34A;
+      z-index: 1000;
+      clip-path: circle(200% at 50% 50%);
+      animation: fillScreen 1.4s cubic-bezier(0.36, 0, 0.24, 1) forwards;
+    }
+
+    .checkmark-container::before {
+      content: "";
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      border-radius: 55%;
+      background: radial-gradient(circle, rgba(139,195,74,0.3) 0%, transparent 70%);
+      z-index: -1;
+      animation: ripple 2s ease-out;
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0.5);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(1.4);
+        opacity: 0;
+      }
+    }
+
+    /* Анимация галочки */
+    .checkmark-container {
+      position: fixed;
+      background-color: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(3px);
+      padding: 30px;
+      border-radius: 50%;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1001;
+      opacity: 0;
+      animation:
+        checkmarkFadeIn 0.9s cubic-bezier(0.5, 0, 0.5, 1) 0.9s forwards,
+        checkmarkFadeOut 0.5s ease-out 1.5s forwards;
+    }
+
+    .checkmark {
+      width: 200px;
+      height: 200px;
+    }
+
+    .checkmark-circle {
+      stroke-dasharray: 200;
+      stroke-dashoffset: 200;
+      stroke-width: 4;
+      stroke-miterlimit: 120;
+      stroke: #fff;
+      fill: none;
+      animation: stroke 0.1s cubic-bezier(0.5, 0, 0.24, 1) 0.8s forwards;
+    }
+
+    .checkmark-check {
+      transform-origin: 50% 50%;
+      stroke-dasharray: 0;
+      stroke-dashoffset: 48;
+      stroke: #fff;
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-miterlimit: 10;
+      animation: stroke 0.3s cubic-bezier(0.36, 0, 0.24, 1) 1.3s forwards;
+    }
+
+    /* Ключевые кадры анимации */
+    @keyframes fillScreen {
+      0% {
+        clip-path: circle(0% at 50% 50%);
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      100% {
+        clip-path: circle(150% at 50% 50%);
+        opacity: 1;
+      }
+    }
+
+    @keyframes checkmarkFadeIn {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    @keyframes checkmarkFadeOut {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.2);
+      }
+    }
+
+    @keyframes stroke {
+      100% { stroke-dashoffset: 0; }
+    }
+
+    /* Стили основного контента */
+    .main-container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      opacity: 0;
+      animation: contentFadeIn 0.5s ease-out .1s forwards;
+    }
+
+    @keyframes contentFadeIn {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 22px;
+      color: #2e7d32;
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-size: 18px;
+      color: #333;
+      margin: 20px 0 12px;
+    }
+
+    #plot-image {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+      margin: 5px 0;
+      border: 1px solid #eee;
+    }
+
+    .facts-container {
+      margin: 15px 0;
+      text-align: left;
+    }
+
+    .fact-item {
+      background: #f8f9ff;
+      margin-bottom: 5px;
+      padding: 7px 10px;
+      border-radius: 6px;
+      border-left: 4px solid #5d78ff;
+      font-size: 14px;
+    }
+
+    .fact-item:nth-child(1) { border-left-color: #4CAF50; }
+    .fact-item:nth-child(2) { border-left-color: #FF9800; }
+    .fact-item:nth-child(3) { border-left-color: #F44336; }
+
+    .score-display {
+      font-size: 16px;
+      margin: 7px 0;
+      padding: 7px;
+      background: #f5f5f5;
+      border-radius: 12px;
+      display: inline-block;
+      text-align: center;
+    }
+
+    #username {
+      text-align: center;
+      margin-bottom: 5px;
+    }
+
+    .buttons-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 7px;
+      flex-wrap: nowrap;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 10px;
+      font-size: 14px;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .next-btn {
+      background-color: #4CAF50;
+    }
+
+    .menu-btn {
+      background-color: #2196F3;
+    }
+
+    .action-btn.disabled {
+      background-color: #cccccc;
+      color: #666666;
+      cursor: not-allowed;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .action-btn.disabled::before {
+      animation: none;
+    }
+
+    .page-unfill {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: transparent;
+      z-index: 1000;
+      clip-path: circle(150% at 50% 50%);
+      opacity: 1;
+      animation: unfillScreen 1s cubic-bezier(0.36, 0, 0.24, 1) 2s forwards;
+    }
+
+    @keyframes unfillScreen {
+      0% {
+        clip-path: circle(150% at 50% 50%);
+        opacity: 1;
+      }
+      100% {
+        clip-path: circle(0% at 50% 50%);
+        opacity: 0;
+      }
+    }
+
+    .action-btn:hover:not(.disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .action-btn:active:not(.disabled) {
+      transform: translateY(1px);
+    }
+
+    .action-btn::before {
+      position: absolute;
+      left: 10px;
+      font-size: 16px;
+    }
+
+    .next-btn::before {
+      content: "→";
+    }
+
+    .menu-btn::before {
+      content: "☰";
+    }
+  </style>
+</head>
+<body>
+  <div class="page-unfill" style="display: none;"></div>
+
+  <!-- Основной контент -->
+  <div class="main-container">
+    <h1>Правильный ответ 🎉</h1>
+
+    <div>
+      <h2>Правильный график:</h2>
+      <img id="plot-image" alt="График ответа">
+    </div>
+
+    <div class="facts-container">
+      <div class="fact-item" id="fact1"></div>
+      <div class="fact-item" id="fact2"></div>
+      <div class="fact-item" id="fact3"></div>
+    </div>
+
+    <div class="buttons-container">
+      <button id="next-btn" class="action-btn next-btn" onclick="navigateTo('quiz_front.html')">
+        Следующий вопрос
+      </button>
+      <button id="menu-btn" class="action-btn menu-btn" onclick="navigateTo('../../education.html')">
+        В меню
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Удаляем анимационные элементы после завершения
+    setTimeout(() => {
+      document.querySelector('.page-fill').remove();
+      document.querySelector('.checkmark-container').remove();
+    }, 2500);
+
+    // Функция для получения параметра из URL
+    function getUrlParameter(name) {
+      name = name.replace(/[\[\]]/g, '\\$&');
+      const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+      const results = regex.exec(window.location.href);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    // Функция для навигации
+    function navigateTo(page) {
+      document.querySelector('.page-unfill').style.display = 'block';
+      setTimeout(() => {
+        window.location.href = page;
+      }, 200);
+    }
+
+    // Загрузка данных вопроса
+    async function loadQuestionData() {
+      const filename = getUrlParameter('file');
+      if (!filename) return;
+
+      try {
+        // Пытаемся загрузить изображение
+        const imagePaths = [
+          `../../../questions/answers/${filename}`,
+          `answers/${filename}`,
+          `../answers/${filename}`
+        ];
+
+        let imageLoaded = false;
+        for (const path of imagePaths) {
+          const img = new Image();
+          img.src = path;
+
+          await new Promise(resolve => {
+            img.onload = () => {
+              if (!imageLoaded) {
+                document.getElementById('plot-image').src = path;
+                imageLoaded = true;
+              }
+              resolve();
+            };
+            img.onerror = resolve;
+          });
+
+          if (imageLoaded) break;
+        }
+
+        // Пытаемся загрузить факты
+        try {
+          const response = await fetch('../../list.json');
+          if (response.ok) {
+            const questions = await response.json();
+            const question = questions.find(q => q.file === filename);
+
+            if (question) {
+              document.getElementById('fact1').textContent = question.fact_1 || 'Нет информации';
+              document.getElementById('fact2').textContent = question.fact_2 || 'Нет информации';
+              document.getElementById('fact3').textContent = question.fact_3 || 'Нет информации';
+            }
+          }
+        } catch (e) {
+          console.error('Ошибка загрузки list.json:', e);
+        }
+      } catch (error) {
+        console.error('Ошибка загрузки данных:', error);
+      }
+    }
+
+    // Инициализация страницы
+    document.addEventListener("DOMContentLoaded", loadQuestionData);
+  </script>
+</body>
+</html>

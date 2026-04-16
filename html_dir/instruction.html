@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Инструкция по использованию бота</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #d40000;
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 28px;
+    }
+    h2 {
+      color: #444;
+      margin-bottom: 15px;
+    }
+    p {
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+    ul {
+      list-style-type: disc;
+      margin-left: 20px;
+      margin-bottom: 15px;
+    }
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 25px auto 0;
+      padding: 12px 40px 12px 24px;
+      font-size: 16px;
+      background-color: #d40000;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+      min-width: 150px;
+    }
+    .back-button:hover {
+      background-color: #bb0000;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .back-button::after {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-top: 2px solid white;
+      border-right: 2px solid white;
+      right: 20px;
+      transform: rotate(45deg);
+      transition: all 0.3s;
+    }
+    .back-button:hover::after {
+      transform: rotate(45deg) translateX(3px);
+      right: 17px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Инструкция по использованию бота для противостояния манипуляциям на рынке</h1>
+
+    <h2>1. Введение</h2>
+    <p>Этот бот предназначен для обучения тому, как распознавать и противостоять манипуляциям на финансовых рынках. Он помогает научиться отличать честное движение рынка от манипуляций и принимать правильные решения на основе реальных рыночных данных.</p>
+
+    <h2>2. Как начать</h2>
+    <p>Чтобы начать, откройте приложение бота через веб-интерфейс или мобильное приложение. На главной странице вам будут предложены различные рыночные ситуации, где вы будете выбирать стратегии, чтобы понять, как противостоять манипуляциям.</p>
+
+    <h2>3. Обучение противостоянию манипуляциям</h2>
+    <p>В этом разделе вы будете работать с графиками, которые иллюстрируют различные рыночные манипуляции, такие как <strong>Pump & Dump</strong>, <strong>Wash Trading</strong> и другие. Каждая ситуация будет иметь описание, а затем вам нужно будет выбрать, является ли текущая ситуация манипуляцией или нет.</p>
+    <ul>
+      <li>Изучите график и прочитайте описание рыночной ситуации.</li>
+      <li>Выберите стратегию, которая, по вашему мнению, противодействует манипуляциям на графике.</li>
+      <li>Нажмите на кнопку, чтобы перейти к следующему шагу.</li>
+    </ul>
+
+    <h2>4. Прохождение квиза</h2>
+    <p>После того как вы изучите график, вам нужно будет выбрать, открывать ли долгую или краткосрочную сделку. Внимательно следите за ситуацией, чтобы правильно определить, манипуляция ли это или нет:</p>
+    <ul>
+      <li><strong>Open long</strong> — выбирайте эту стратегию, если рынок ведет себя честно, без манипуляций.</li>
+      <li><strong>Open short</strong> — выбирайте эту стратегию, если вы считаете, что на графике присутствует манипуляция.</li>
+    </ul>
+
+    <h2>5. Оценка вашего ответа</h2>
+    <p>После того как вы выберете стратегию, бот проверит правильность вашего ответа. Если ваш выбор оказался правильным, вы получите подтверждение успеха. В случае ошибки вам будет предложено попробовать снова.</p>
+
+    <h2>6. Ограничение попыток</h2>
+    <p>Помните, что у вас есть ограниченное количество попыток для прохождения тестов. Если вы исчерпаете все попытки, бот уведомит вас об этом и предложит вернуться в главное меню.</p>
+
+    <h2>7. Переход к следующей теме</h2>
+    <p>После успешного прохождения теста или возвращения в главное меню, вам будет предложено изучить следующую рыночную ситуацию или вернуться к предыдущей для повторного анализа.</p>
+
+    <div style="text-align: center;">
+      <button class="back-button" onclick="window.location.href='bot_app.html'">Вернуться в меню</button>
+    </div>
+  </div>
+</body>
+</html>

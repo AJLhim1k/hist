@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7f9;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px 0;
+      overflow-y: auto;
+    }
+
+    #quiz-container {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      max-width: 450px;
+      width: 100%;
+      text-align: center;
+      animation: fadeIn 0.5s ease forwards;
+      opacity: 0;
+    }
+
+    img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .facts-container {
+      margin: 20px 0;
+      text-align: left;
+    }
+
+    .fact-item {
+      background: #f8f9ff;
+      margin-bottom: 10px;
+      padding: 12px 15px;
+      border-radius: 8px;
+      border-left: 3px solid #5d78ff;
+      font-size: 14px;
+    }
+
+    .fact-item:nth-child(1) { border-left-color: #4CAF50; }
+    .fact-item:nth-child(2) { border-left-color: #FF9800; }
+    .fact-item:nth-child(3) { border-left-color: #F44336; }
+
+    .button-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 14px;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    .fade-out {
+      animation: fadeOut 0.5s ease forwards;
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        transform: scale(0.97);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(1.03);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="quiz-container">
+    <h2>Какой тип манипуляции изображён?</h2>
+    <img id="graph-img" src="" alt="График" />
+
+    <div class="facts-container">
+      <div class="fact-item" id="fact1"></div>
+      <div class="fact-item" id="fact2"></div>
+      <div class="fact-item" id="fact3"></div>
+    </div>
+
+    <form id="quiz-form">
+      <input type="hidden" name="answer" id="answer" />
+      <div class="button-container" id="answer-buttons"></div>
+    </form>
+  </div>
+
+  <script>
+    let correctAnswer = null;
+    let currentFilename = null;
+
+    function setAnswer(value) {
+      document.getElementById("answer").value = value;
+    }
+
+    document.getElementById("quiz-form").addEventListener("submit", async function(event) {
+      event.preventDefault();
+      const userAnswer = document.getElementById("answer").value;
+      const container = document.getElementById("quiz-container");
+      container.classList.add("fade-out");
+
+      const isCorrect = (userAnswer === correctAnswer);
+
+      try {
+        await fetch("/api/submit_answer", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ correct: isCorrect, name: userAnswer })
+        });
+      } catch (e) {
+        console.error("Ошибка при отправке результата:", e);
+      }
+
+      setTimeout(() => {
+        const resultPage = isCorrect ? "correct.html" : "wrong.html";
+        window.location.href = resultPage + "?file=" + encodeURIComponent(currentFilename);
+      }, 500);
+    });
+
+    fetch("../html_dir/list.json")
+      .then(response => response.json())
+      .then(items => {
+        if (!items.length) throw new Error("Список файлов пуст");
+
+        const randomItem = items[Math.floor(Math.random() * items.length)];
+        document.getElementById("graph-img").src = `../questions/${randomItem.file}`;
+        correctAnswer = randomItem.ans;
+        currentFilename = randomItem.file;
+
+        document.getElementById("fact1").textContent = randomItem.fact_1;
+        document.getElementById("fact2").textContent = randomItem.fact_2;
+        document.getElementById("fact3").textContent = randomItem.fact_3;
+
+        const possibleAnswers = [
+          'momentum ignition', 'pump and dump', 'front running', 'сжатие',
+          'corner', 'spoofing', 'layering', 'pinging', 'switch', 'none', 'wash trading'
+        ];
+
+        const labelMap = {
+          'none': 'Нет манипуляции'
+        };
+
+        // Подбираем 3 случайных + правильный
+        const uniqueAnswers = new Set();
+        uniqueAnswers.add(correctAnswer);
+        while (uniqueAnswers.size < 4) {
+          const rand = possibleAnswers[Math.floor(Math.random() * possibleAnswers.length)];
+          uniqueAnswers.add(rand);
+        }
+
+        // Перемешиваем ответы
+        const answersArray = Array.from(uniqueAnswers);
+        answersArray.sort(() => Math.random() - 0.5);
+
+const pastelStyles = [
+  { bg: '#8BC34A', color: '#fff' },
+  { bg: '#2196F3', color: '#fff' },
+  { bg: '#FF9800', color: '#fff' },
+  { bg: '#E91E63', color: '#fff' }
+];
+
+// Перемешиваем стили, чтобы не было предсказуемости
+const shuffledStyles = pastelStyles.sort(() => Math.random() - 0.5);
+
+// Присваиваем стиль каждому ответу по порядку
+const styledAnswers = answersArray.map((text, index) => {
+  const label = labelMap[text] || text.charAt(0).toUpperCase() + text.slice(1);
+  const style = shuffledStyles[index % shuffledStyles.length];
+  return {
+    value: text,
+    text: label,
+    style: `background-color: ${style.bg}; color: ${style.color};`
+  };
+});
+
+
+        const container = document.getElementById("answer-buttons");
+        styledAnswers.forEach(answer => {
+          const btn = document.createElement("button");
+          btn.type = "submit";
+          btn.style = answer.style;
+          btn.textContent = answer.text;
+          btn.onclick = () => setAnswer(answer.value);
+          container.appendChild(btn);
+        });
+      })
+      .catch(error => {
+        console.error("Ошибка загрузки графика:", error);
+        document.getElementById("graph-img").alt = "Ошибка загрузки изображения.";
+      });
+  </script>
+</body>
+</html>

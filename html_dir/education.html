@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ru"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Обучение трейдингу</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      animation: fadeIn 0.6s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h1 {
+      color: #d40000;
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+    .description {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #666;
+    }
+    .graph-buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .graph-button {
+      border: none;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      padding: 0;
+      height: 160px;
+    }
+    .graph-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .graph-preview {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      object-position: left;
+      border-bottom: 1px solid #eee;
+    }
+    .graph-info {
+      padding: 10px;
+    }
+    .graph-title {
+      font-weight: bold;
+      font-size: 14px;
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .graph-desc {
+      font-size: 12px;
+      color: #666;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 25px auto 0;
+      padding: 12px 40px 12px 24px;
+      font-size: 16px;
+      background-color: #d40000;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+      min-width: 150px;
+    }
+    .back-button:hover {
+      background-color: #bb0000;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .back-button::after {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-top: 2px solid white;
+      border-right: 2px solid white;
+      right: 20px;
+      transform: rotate(45deg);
+      transition: all 0.3s;
+    }
+    .back-button:hover::after {
+      transform: rotate(45deg) translateX(3px);
+      right: 17px;
+    }
+    .fade-out {
+      animation: fadeOut 0.5s ease forwards;
+    }
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+    }.graph-button1 { background-color: #fffafa; animation-delay: 0.05s; }
+.graph-button2 { background-color: #fff1f1; animation-delay: 0.1s; }
+.graph-button3 { background-color: #ffe7e7; animation-delay: 0.15s; }
+.graph-button4 { background-color: #ffdfdf; animation-delay: 0.2s; }
+.graph-button5 { background-color: #ffd6d6; animation-delay: 0.25s; }
+.graph-button6 { background-color: #ffcece; animation-delay: 0.3s; }
+.graph-button7 { background-color: #ffc5c5; animation-delay: 0.35s; }
+.graph-button8 { background-color: #ffbdbd; animation-delay: 0.4s; }
+.graph-button9 { background-color: #ffb3b3; animation-delay: 0.45s; }
+.graph-button10 { background-color: #ffa9a9; animation-delay: 0.5s; }
+
+    @media (max-width: 500px) {
+      .graph-buttons {
+        grid-template-columns: 1fr;
+      }
+      .graph-button {
+        height: 140px;
+      }
+      .graph-preview {
+        height: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Изучение манипуляций</h1>
+    <p class="description">Узнайте о типах недобросовестных практик</p>
+    <div class="graph-buttons">
+      <button class="graph-button graph-button1" onclick="location.href='strats/pd/pump&dump.html'">
+        <img src="../questions/plot102.png" alt="График 1" class="graph-preview">
+        <div class="graph-info">
+          <div class="graph-title">Pump & dump</div>
+          <div class="graph-desc">Накачка и сброс</div>
+        </div>
+      </button>
+      <button class="graph-button graph-button2" onclick="location.href='./strats/corner/corner.html'">
+        <img src="../questions/plot105.png" alt="График 2" class="graph-preview">
+        <div class="graph-info">
+          <div class="graph-title">Corner</div>
+          <div class="graph-desc">Корнер</div>
+        </div>
+      </button>
+      <button class="graph-button graph-button3" onclick="location.href='./strats/spoofing/spoofing.html'">
+        <img src="../questions/plot106.png" alt="График 3" class="graph-preview">
+        <div class="graph-info">
+          <div class="graph-title">Spoofing</div>
+          <div class="graph-desc">Спуфинг</div>
+        </div>
+      </button>
+      <button class="graph-button graph-button4" onclick="location.href='strats/washtrading/washtrading.html'">
+        <img src="../questions/plot110.png" alt="График 4" class="graph-preview">
+        <div class="graph-info">
+          <div class="graph-title">Wash Trading</div>
+          <div class="graph-desc">Фиктивные сделки</div>
+        </div>
+      </button>
+      <button class="graph-button graph-button5" onclick="location.href='strats/ign/ign.html'">
+        <img src="../questions/plot101.png" alt="График 5" class="graph-preview">
+        <div class="graph-info">
+          <div class="graph-title">Momentum ignition</div>
+          <div class="graph-desc">«Поджёг» импульса</div>
+        </div>
+      </button>
+      <button class="graph-button graph-button6" onclick="location.href='strats/front/front.html'">
+        <img src="../questions/plot103.png" alt="График 6" class="graph-preview">
+        <div class="graph-info">
+          <div class="graph-title">Front-running</div>
+          <div class="graph-desc">Опережающая торговля</div>
+        </div>
+      </button>
+
+      <button class="graph-button graph-button7" onclick="location.href='strats/ping/ping.html'">
+        <img src="../questions/plot108.png" alt="График 7" class="graph-preview">
+        <div class="graph-info">
+          <div class="graph-title">Pinging</div>
+          <div class="graph-desc">Пингование</div>
+        </div>
+      </button>
+
+      <button class="graph-button graph-button8" onclick="location.href='strats/switch/switch.html'">
+        <img src="../questions/plot109.png" alt="График 8" class="graph-preview">
+        <div class="graph-info">
+          <div class="graph-title">Switch</div>
+          <div class="graph-desc">Переключение</div>
+        </div>
+      </button>
+
+
+      <button class="graph-button graph-button9" onclick="location.href='strats/sq/sq.html'">
+        <img src="../questions/plot104.png" alt="График 9" class="graph-preview">
+        <div class="graph-info">
+          <div class="graph-title">Compression</div>
+          <div class="graph-desc">Сжатие</div>
+        </div>
+      </button>
+
+            <button class="graph-button graph-button10" onclick="location.href='strats/layer/layer.html'">
+        <img src="../questions/plot107.png" alt="График 10" class="graph-preview">
+        <div class="graph-info">
+          <div class="graph-title">Layering</div>
+          <div class="graph-desc">Многоуровневый
+спуфинг</div>
+        </div>
+      </button>
+    </div>
+    <div style="text-align: center;">
+      <button class="back-button" id="backBtn">В меню</button>
+    </div>
+  </div>
+  <script>
+    document.getElementById('backBtn').addEventListener('click', function() {
+      document.querySelector('.container').classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = 'bot_app.html';
+      }, 500);
+    });
+  </script>
+</body>
+</html>

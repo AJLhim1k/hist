@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Подиум с персонажами</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      background: #f0f0f0;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    .podium {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      height: 300px;
+      position: relative;
+    }
+
+    .pedestal {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      width: 100px;
+    }
+
+    .first-place,
+    .second-place,
+    .third-place {
+      width: 100px;
+      border-radius: 10px 10px 0 0;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transform: translateY(100%);
+      animation: slideUp 0.8s ease-out forwards;
+    }
+
+    .first-place {
+      height: 200px;
+      background: linear-gradient(to right, #ffd700, #f9c300);
+      animation-delay: 1.8s;
+    }
+
+    .second-place {
+      height: 150px;
+      background: linear-gradient(to right, #c0c0c0, #a0a0a0);
+      animation-delay: 0.9s;
+    }
+
+    .third-place {
+      height: 100px;
+      background: linear-gradient(to right, #cd7f32, #b87333);
+      animation-delay: 0s;
+    }
+
+    @keyframes slideUp {
+      0% { transform: translateY(100%); }
+      100% { transform: translateY(0); }
+    }
+
+    .character {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(100%);
+      opacity: 0;
+      animation: riseUp 0.6s ease-out forwards;
+    }
+
+    @keyframes riseUp {
+      0% {
+        transform: translateX(-50%) translateY(100%);
+        opacity: 0;
+      }
+      100% {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .character-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .cap {
+      width: 55px;
+      height: 20px;
+      background: #ff0000;
+      border-radius: 10px 10px 0 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .cap::after {
+      content: '';
+      position: absolute;
+      width: 60px;
+      height: 10px;
+      background: #ff0000;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 0 0 15px 15px;
+    }
+
+    .head {
+      width: 50px;
+      height: 50px;
+      background: #fff;
+      border-radius: 50%;
+      border: 2px solid #ddd;
+      margin-top: -10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyes {
+      display: flex;
+      justify-content: space-around;
+      position: absolute;
+      top: 25px;
+      width: 100%;
+    }
+
+    .eye {
+      width: 8px;
+      height: 8px;
+      background: #000;
+      border-radius: 50%;
+    }
+
+    .neck {
+      width: 14px;
+      height: 14px;
+      background: #fff;
+      border: 2px solid #ddd;
+      border-radius: 7px;
+      margin-top: -4px;
+      z-index: 0;
+    }
+
+    .upper-body {
+      position: relative;
+      width: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .arms {
+      position: absolute;
+      top: -10px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 2px;
+      z-index: -1;
+    }
+
+    .arm {
+      width: 10px;
+      height: 40px;
+      background: #fff;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      transform-origin: top center;
+      animation: cheer 1.5s ease-in-out infinite;
+    }
+
+    @keyframes cheer {
+      0%, 100% { transform: rotate(0deg) scaleY(1); }
+      50% { transform: rotate(0deg) scaleY(0.6); }
+    }
+
+    .body {
+      width: 60px;
+      height: 50px;
+      background: #ff0000;
+      color: white;
+      font-weight: bold;
+      font-size: 10px;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 50px;
+      border-radius: 15px 15px 0 0;
+      box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+      font-family: 'Arial Black', sans-serif;
+      position: relative;
+      z-index: 0;
+    }
+
+    .legs {
+      display: flex;
+      gap: 10px;
+      margin-top: 0;
+    }
+
+    .leg {
+      width: 15px;
+      height: 30px;
+      background: #fff;
+      border: 2px solid #ddd;
+      border-radius: 0 0 8px 8px;
+    }
+
+    .pedestal:nth-child(1) .character {
+      bottom: 150px;
+      animation-delay: 1.7s;
+    }
+
+    .pedestal:nth-child(2) .character {
+      bottom: 200px;
+      animation-delay: 2.6s;
+    }
+
+    .pedestal:nth-child(3) .character {
+      bottom: 100px;
+      animation-delay: 0.8s;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="podium">
+    <!-- 2-е место -->
+    <div class="pedestal">
+      <div class="second-place"></div>
+      <div class="character">
+        <div class="character-inner">
+          <div class="cap"></div>
+          <div class="head">
+            <div class="eyes">
+              <div class="eye"></div>
+              <div class="eye"></div>
+            </div>
+          </div>
+          <div class="neck"></div>
+          <div class="upper-body">
+            <div class="arms">
+              <div class="arm"></div>
+              <div class="arm"></div>
+            </div>
+            <div class="body">MOEX</div>
+          </div>
+          <div class="legs">
+            <div class="leg"></div>
+            <div class="leg"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1-е место -->
+    <div class="pedestal">
+      <div class="first-place"></div>
+      <div class="character">
+        <div class="character-inner">
+          <div class="cap"></div>
+          <div class="head">
+            <div class="eyes">
+              <div class="eye"></div>
+              <div class="eye"></div>
+            </div>
+          </div>
+          <div class="neck"></div>
+          <div class="upper-body">
+            <div class="arms">
+              <div class="arm"></div>
+              <div class="arm"></div>
+            </div>
+            <div class="body">MOEX</div>
+          </div>
+          <div class="legs">
+            <div class="leg"></div>
+            <div class="leg"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3-е место -->
+    <div class="pedestal">
+      <div class="third-place"></div>
+      <div class="character">
+        <div class="character-inner">
+          <div class="cap"></div>
+          <div class="head">
+            <div class="eyes">
+              <div class="eye"></div>
+              <div class="eye"></div>
+            </div>
+          </div>
+          <div class="neck"></div>
+          <div class="upper-body">
+            <div class="arms">
+              <div class="arm"></div>
+              <div class="arm"></div>
+            </div>
+            <div class="body">MOEX</div>
+          </div>
+          <div class="legs">
+            <div class="leg"></div>
+            <div class="leg"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
