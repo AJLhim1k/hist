@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Архитектурный облик Москвы в XX веке</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Literata:opsz,wght@7..72,500;7..72,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="bg-layer"></div>
+  <main class="layout">
+    <header class="hero reveal">
+      <p class="eyebrow">Исторический проект</p>
+      <h1 id="project-title">Архитектурный облик Москвы в XX веке</h1>
+      <p id="project-goal" class="goal"></p>
+      <div class="meta" id="project-meta"></div>
+    </header>
+
+    <section class="panel user-panel reveal">
+      <div class="user-block">
+        <p class="label">Участник</p>
+        <h2 id="user-name">Гость</h2>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <p class="label">Баллы</p>
+          <p id="user-score" class="stat-value">0</p>
+        </div>
+        <div class="stat-card">
+          <p class="label">Место в рейтинге</p>
+          <p id="user-rank" class="stat-value">-</p>
+        </div>
+        <div class="stat-card">
+          <p class="label">Пройдено вопросов</p>
+          <p id="user-answered" class="stat-value">0</p>
+        </div>
+      </div>
+      <div class="actions">
+        <a class="btn" href="/api/report/markdown" id="download-md">Скачать .md для PPT/PDF</a>
+        <a class="btn btn-secondary" href="/api/report/html" target="_blank" rel="noopener">Открыть версию для печати</a>
+      </div>
+    </section>
+
+    <section class="panel reveal">
+      <h2>Логика экскурсии</h2>
+      <div id="timeline" class="timeline"></div>
+    </section>
+
+    <section class="panel reveal">
+      <h2>Пешеходный сценарий</h2>
+      <div id="route" class="route"></div>
+    </section>
+
+    <section class="panel reveal">
+      <h2>Европейские влияния</h2>
+      <ul id="influences" class="bulleted"></ul>
+    </section>
+
+    <section class="panel reveal">
+      <h2>Нереализованные проекты</h2>
+      <div id="unrealized" class="cards"></div>
+    </section>
+
+    <section class="panel reveal">
+      <h2>Интерактивный квиз</h2>
+      <div class="quiz-head">
+        <p id="quiz-progress">Вопрос 1</p>
+        <div class="progress-track"><div id="quiz-progress-fill" class="progress-fill"></div></div>
+      </div>
+      <div id="quiz-box" class="quiz-box"></div>
+      <div id="quiz-feedback" class="quiz-feedback" aria-live="polite"></div>
+    </section>
+
+    <section class="panel reveal">
+      <h2>Рейтинг команды</h2>
+      <div id="leaderboard" class="leaderboard"></div>
+    </section>
+
+    <section class="panel reveal">
+      <h2>Список источников</h2>
+      <ol id="sources" class="sources"></ol>
+    </section>
+  </main>
+
+  <script src="/static/app.js" defer></script>
+</body>
+</html>
